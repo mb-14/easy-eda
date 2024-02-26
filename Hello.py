@@ -14,37 +14,40 @@
 
 import streamlit as st
 from streamlit.logger import get_logger
+import pandas as pd
+from io import StringIO
+from ydata_profiling import ProfileReport
+from streamlit_ydata_profiling import st_profile_report
+
 
 LOGGER = get_logger(__name__)
 
 
 def run():
     st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+        page_title="Quick EDA",
+        page_icon="🔍",
     )
 
-    st.write("# Welcome to Streamlit! 👋")
+    uploaded_file = st.file_uploader("Choose a data file", type=["csv", "dta", "xlxs"])
+    if uploaded_file is not None:
+      # To read file as bytes:
+      bytes_data = uploaded_file.getvalue()
 
-    st.sidebar.success("Select a demo above.")
+      # To convert to a string based IO:
+      stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+      # To read file as string:
+      string_data = stringio.read()
+
+      # Can be used wherever a "file-like" object is accepted:
+      dataframe = pd.read_csv(uploaded_file)
+      
+      report = ProfileReport(dataframe)
+
+      st_profile_report(report, navbar=True)
+
+
 
 
 if __name__ == "__main__":
