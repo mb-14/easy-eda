@@ -25,21 +25,37 @@ LOGGER = get_logger(__name__)
 def parse_file(uploaded_file):
     try:
         return pd.read_csv(uploaded_file)
-    except Exception:
+    except Exception as e:
+        parse_error = e
         pass
     try:
+        uploaded_file.seek(0)
         return pd.read_excel(uploaded_file)
-    except Exception:
+    except Exception as e:
+        parse_error = e
         pass
     try:
+        uploaded_file.seek(0)
         return pd.read_parquet(uploaded_file)
-    except Exception:
+    except Exception as e:
+        parse_error = e
         pass
     try:
+        uploaded_file.seek(0)
         return pd.read_stata(uploaded_file)
-    except Exception:
+    except Exception as e:
+        parse_error = e
         pass
-    st.error(f"Could not parse file ${uploaded_file.name}")
+
+    st.error(f"Could not parse file ${uploaded_file.name}: {str(parse_error)}")
+
+
+@st.cache_data(show_spinner="Generating report")
+def generate_report(uploaded_file):
+    data_frame = parse_file(uploaded_file)
+    report = ProfileReport(data_frame, explorative=True,
+                           title=uploaded_file.name)
+    return report.to_html()
 
 
 def run():
@@ -54,9 +70,10 @@ def run():
     uploaded_file = st.file_uploader("Upload a dataset", type=[
                                      "csv", "dta", "xlsx", "xls", "parquet"])
     if uploaded_file is not None:
-        data_frame = parse_file(uploaded_file)
-        report = ProfileReport(data_frame, explorative=True)
-        st_profile_report(report, navbar=True)
+        report_html = generate_report(uploaded_file)
+
+        st.download_button('Download Report', report_html,
+                           file_name=f"{uploaded_file.name}.html")
 
 
 if __name__ == "__main__":

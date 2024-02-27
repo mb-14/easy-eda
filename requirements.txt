@@ -4,6 +4,5 @@ pandas
 pydeck
 streamlit
 ydata-profiling
-streamlit-ydata-profiling
 xlrd
 openpyxl
