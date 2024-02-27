@@ -15,9 +15,9 @@
 import streamlit as st
 from streamlit.logger import get_logger
 import pandas as pd
-from io import StringIO
 from ydata_profiling import ProfileReport
 from streamlit_ydata_profiling import st_profile_report
+import magic
 
 
 LOGGER = get_logger(__name__)
@@ -28,18 +28,12 @@ def run():
         page_title="Quick EDA",
         page_icon="🔍",
     )
+    st.text("A simple EDA tool for tabular data")
 
-    uploaded_file = st.file_uploader("Choose a data file", type=["csv", "dta", "xlxs"])
+    uploaded_file = st.file_uploader("Choose a data file", type=["csv", "dta", "xlsx", "xls"])
     if uploaded_file is not None:
-      # To read file as bytes:
-      bytes_data = uploaded_file.getvalue()
-
-      # To convert to a string based IO:
-      stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-
-      # To read file as string:
-      string_data = stringio.read()
-
+      file_type = magic.from_buffer(uploaded_file.read(1024), mime=True)
+      st.write(file_type)
       # Can be used wherever a "file-like" object is accepted:
       dataframe = pd.read_csv(uploaded_file)
       
