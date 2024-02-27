@@ -1,7 +1,5 @@
-# Welcome to streamlit
+# Easy EDA
 
-This is the app you get when you run `streamlit hello`, extracted as its own app.
+Streamlit app to perform automated EDA on tabular data using [ydata-profiling](https://github.com/ydataai/ydata-profiling)
 
-Edit [Hello.py](./Hello.py) to customize this app to your heart's desire. ❤️
-
-Check it out on [Streamlit Community Cloud](https://st-hello-app.streamlit.app/)
+Live on: https://easy-eda-app.streamlit.app/
