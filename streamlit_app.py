@@ -17,31 +17,42 @@ from streamlit.logger import get_logger
 import pandas as pd
 from ydata_profiling import ProfileReport
 from streamlit_ydata_profiling import st_profile_report
-import filetype
 
 
 LOGGER = get_logger(__name__)
 
 
+def parse_file(uploaded_file):
+    try:
+        return pd.read_csv(uploaded_file)
+    except Exception:
+        pass
+    try:
+        return pd.read_excel(uploaded_file)
+    except Exception:
+        pass
+    try:
+        return pd.read_stata(uploaded_file)
+    except Exception:
+        pass
+    st.error(f"Could not parse file ${uploaded_file.name}")
+
+
 def run():
     st.set_page_config(
-        page_title="Quick EDA",
+        page_title="Easy EDA",
         page_icon="🔍",
     )
-    st.header("A simple EDA tool for tabular data")
+    st.header("Easy EDA")
+    st.markdown(
+        "Perform automated EDA on tabular data using [ydata-profiling](https://github.com/ydataai/ydata-profiling)")
 
-    uploaded_file = st.file_uploader("Choose a data file", type=["csv", "dta", "xlsx", "xls"])
+    uploaded_file = st.file_uploader("Choose a data file", type=[
+                                     "csv", "dta", "xlsx", "xls"])
     if uploaded_file is not None:
-      file_type = filetype.guess(uploaded_file)
-      st.header(file_type.extension)
-      # Can be used wherever a "file-like" object is accepted:
-      dataframe = pd.read_csv(uploaded_file)
-
-      report = ProfileReport(dataframe)
-
-      st_profile_report(report, navbar=True)
-
-
+        data_frame = parse_file(uploaded_file)
+        report = ProfileReport(data_frame)
+        st_profile_report(report, navbar=True)
 
 
 if __name__ == "__main__":
