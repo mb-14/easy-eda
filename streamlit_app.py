@@ -43,7 +43,7 @@ def run():
         page_title="Easy EDA",
         page_icon="🔍",
     )
-    st.header("Easy EDA")
+    st.header("🔍 Easy EDA")
     st.markdown(
         "Perform automated EDA on tabular datasets using [ydata-profiling](https://github.com/ydataai/ydata-profiling)")
 
