@@ -51,7 +51,7 @@ def run():
                                      "csv", "dta", "xlsx", "xls"])
     if uploaded_file is not None:
         data_frame = parse_file(uploaded_file)
-        report = ProfileReport(data_frame)
+        report = ProfileReport(data_frame, explorative=True)
         st_profile_report(report, navbar=True)
 
 
