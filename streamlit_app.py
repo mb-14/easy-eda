@@ -17,7 +17,7 @@ from streamlit.logger import get_logger
 import pandas as pd
 from ydata_profiling import ProfileReport
 from streamlit_ydata_profiling import st_profile_report
-import magic
+import filetype
 
 
 LOGGER = get_logger(__name__)
@@ -28,15 +28,15 @@ def run():
         page_title="Quick EDA",
         page_icon="🔍",
     )
-    st.text("A simple EDA tool for tabular data")
+    st.header("A simple EDA tool for tabular data")
 
     uploaded_file = st.file_uploader("Choose a data file", type=["csv", "dta", "xlsx", "xls"])
     if uploaded_file is not None:
-      file_type = magic.from_buffer(uploaded_file.read(1024), mime=True)
-      st.write(file_type)
+      file_type = filetype.guess(uploaded_file)
+      st.header(file_type.extension)
       # Can be used wherever a "file-like" object is accepted:
       dataframe = pd.read_csv(uploaded_file)
-      
+
       report = ProfileReport(dataframe)
 
       st_profile_report(report, navbar=True)
