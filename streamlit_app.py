@@ -32,6 +32,10 @@ def parse_file(uploaded_file):
     except Exception:
         pass
     try:
+        return pd.read_parquet(uploaded_file)
+    except Exception:
+        pass
+    try:
         return pd.read_stata(uploaded_file)
     except Exception:
         pass
@@ -48,7 +52,7 @@ def run():
         "Perform automated EDA on tabular datasets using [ydata-profiling](https://github.com/ydataai/ydata-profiling)")
 
     uploaded_file = st.file_uploader("Upload a dataset", type=[
-                                     "csv", "dta", "xlsx", "xls"])
+                                     "csv", "dta", "xlsx", "xls", "parquet"])
     if uploaded_file is not None:
         data_frame = parse_file(uploaded_file)
         report = ProfileReport(data_frame, explorative=True)
