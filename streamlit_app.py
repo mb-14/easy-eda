@@ -45,9 +45,9 @@ def run():
     )
     st.header("Easy EDA")
     st.markdown(
-        "Perform automated EDA on tabular data using [ydata-profiling](https://github.com/ydataai/ydata-profiling)")
+        "Perform automated EDA on tabular datasets using [ydata-profiling](https://github.com/ydataai/ydata-profiling)")
 
-    uploaded_file = st.file_uploader("Choose a data file", type=[
+    uploaded_file = st.file_uploader("Upload a dataset", type=[
                                      "csv", "dta", "xlsx", "xls"])
     if uploaded_file is not None:
         data_frame = parse_file(uploaded_file)
